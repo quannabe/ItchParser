@@ -1,0 +1,193 @@
+
+    formats:
+    - MessageType                  : [1,1]
+    - Second                       : [2,4]
+    - Timestamp                    : [2,4]
+    - Stock                        : [3,8]
+    - Shares                       : [2,4]
+    - Price                        : [2,4]
+    - BuySellIndicator             : [1,1]
+    - OrderReferenceNumber         : [4,8]
+    - MatchNumber                  : [4,8]
+    - Attribution                  : [3,4]
+    - CanceledShares               : [2,4]
+    - CrossPrice                   : [2,4]
+    - CrossShares                  : [4,8]
+    - CrossType                    : [1,1]
+    - CurrentReferencePrice        : [2,4]
+    - EventCode                    : [1,1]
+    - ExecutedShares               : [2,4]
+    - ExecutionPrice               : [2,4]
+    - FarPrice                     : [2,4]
+    - FinancialStatusIndicator     : [1,1]
+    - Imbalance                    : [4,8]
+    - ImbalanceDirection           : [1,1]
+    - MPID                         : [3,4]
+    - MarketCatagory               : [1,1]
+    - MarketMakerMode              : [1,1]
+    - MarketParticipantState       : [1,1]
+    - NearPrice                    : [2,4]
+    - NewOrderReferenceNumber      : [4,8]
+    - OriginalOrderReferenceNumber : [4,8]
+    - PairedShares                 : [4,8]
+    - PriceVariationIndicator      : [1,1]
+    - PrimaryMarketMaker           : [1,1]
+    - Printable                    : [1,1]
+    - Reason                       : [3,4]
+    - RegSHOAction                 : [1,1]
+    - Reserved                     : [1,1]
+    - RoundLotSize                 : [2,4]
+    - RoundLotsOnly                : [1,1]
+    - TradingState                 : [1,1]
+
+    messages:
+      T: 
+        name: TimeStamp Seconds
+        fields:
+        - MessageType
+        - Second
+      S: 
+        name: System Event Message
+        fields:
+        - MessageType
+        - Timestamp
+        - EventCode
+      R:
+        name: Stock Directory
+        fields:
+        - MessageType
+        - Timestamp
+        - Stock
+        - MarketCatagory
+        - FinancialStatusIndicator
+        - RoundLotSize
+        - RoundLotsOnly
+      H:
+        name: Stock Trading Action
+        fields:
+        - MessageType
+        - Timestamp
+        - Stock
+        - TradingState
+        - Reserved
+        - Reason
+      Y:
+        name: Reg SHO Short Sale Price Test Restricted Indicator
+        fields:
+        - MessageType
+        - Timestamp
+        - Stock
+        - RegSHOAction
+      L:
+        name: Market Participant Position
+        fields:
+        - MessageType
+        - Timestamp
+        - MPID
+        - Stock
+        - PrimaryMarketMaker
+        - MarketMakerMode
+        - MarketParticipantState
+      A:
+        name: Add Order (No MPID Attribution)
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - BuySellIndicator
+        - Shares
+        - Stock
+        - Price
+      F:
+        name: Add Order with MPID Attribution
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - BuySellIndicator
+        - Shares
+        - Stock
+        - Price
+        - Attribution
+      E:
+        name: Order Executed
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - ExecutedShares
+        - MatchNumber
+      C:
+        name: Order Executed with Price
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - ExecutedShares
+        - MatchNumber
+        - Printable
+        - ExecutionPrice
+      X:
+        name: Order Cancel
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - CanceledShares
+      D:
+        name: Order Delete
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+      U:
+        name: Order Replace
+        fields:
+        - MessageType
+        - Timestamp
+        - OriginalOrderReferenceNumber
+        - NewOrderReferenceNumber
+        - Shares
+        - Price
+      P:
+        name: Trade Message (non-cross)
+        fields:
+        - MessageType
+        - Timestamp
+        - OrderReferenceNumber
+        - BuySellIndicator
+        - Shares
+        - Stock
+        - Price
+        - MatchNumber
+      Q:
+        name: Cross Trade
+        fields:
+        - MessageType
+        - Timestamp
+        - CrossShares
+        - Stock
+        - CrossPrice
+        - MatchNumber
+        - CrossType
+      B:
+        name: Broken Trade
+        fields:
+        - MessageType
+        - Timestamp
+        - MatchNumber
+      I:
+        name: Net Order Imbalance Indicator (NOII)
+        fields:
+        - MessageType
+        - Timestamp
+        - PairedShares
+        - Imbalance
+        - ImbalanceDirection
+        - Stock
+        - FarPrice
+        - NearPrice
+        - CurrentReferencePrice
+        - CrossType
+        - PriceVariationIndicator
+   
