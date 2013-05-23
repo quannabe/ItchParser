@@ -66,24 +66,14 @@ import java.util.ArrayList;
 	}
 		
 		// Read the message from binary file
-		public byte[] parse(int count) throws IOException, InterruptedException{
+		public byte[] parse() throws IOException, InterruptedException{
 			
-			// Get the message length
-			input.read(lenBytes);
-			
-			//  Add EOF conditions
-			int payLength =  (ByteBuffer.wrap(lenBytes)).getShort(0);
-			
-			
-			if (0 == -1){
+			// EOF conditions
+			if (input.read() == -1){
 				return null;
 			}
 			
-			if (count% 1000000 == 0){
-				System.out.println((ByteBuffer.wrap(lenBytes)).getShort());
-				System.out.println("available: " + input.available());
-
-			}
+			int payLength = input.read();
 
 			// Get the payload
 			byte[] payBytes = new byte[payLength];
@@ -106,14 +96,11 @@ import java.util.ArrayList;
 		// main test harness
 		public static void main(String args[]) throws IOException, InterruptedException{
 		
-			
-			// ITCH file location
-			// /Users/William/Desktop/storm/python/cdtitch41/data/09142012.itch41
-			String filename = "/Users/William/Desktop/storm/python/cdtitch41/data/09142012.itch41";
+
 			
 			
 			// ITCH file location
-			//String filename = "/location/of/your/itch/binary/file.itch41";
+			String filename = "/location/of/your/itch/binary/file.itch41";
 			
 			// Set this to 'false' to supress output
 			Boolean PP = false;
@@ -124,13 +111,9 @@ import java.util.ArrayList;
 			
 			final long startTime = System.currentTimeMillis();
 			
-			while (parse.parse(count) != null){
+			while (parse.parse() != null){
 				
 
-				if (count% 1000000 == 0){
-					System.out.println("count: " + count);
-				}
-				count ++;
 			}
 			final long endTime = System.currentTimeMillis();
 
