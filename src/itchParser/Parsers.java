@@ -2,16 +2,24 @@ package itchParser;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * itchParser class will take a message (byteArray)
+ * and use the ParseDS data structures to resolve the message
+ * to human-readable format
+ * @author William Sell
+ * quannabe@gmail.com
+ *
+ */
 
 public class Parsers {
 	
 	private ParseDS parDS;
 	
-	// Constructor
+	// Constructor, takes a ParseDS object
 	Parsers(ParseDS parDS){
-		// Use our ParseDS object
 		this.parDS = parDS;	
 	}
 	
@@ -38,58 +46,33 @@ public class Parsers {
 		
 	}
 	
-	// given byte array, will return an int
+	// given byte array of size 4, will return an INT
 	public String getInt(byte[] payload){
-	
-		// int is 4 bytes long
 		
-	return Integer.toString( ByteBuffer.wrap(payload).getInt() );
+		return Integer.toString( ByteBuffer.wrap(payload).getInt() );
 	}
 
-	// given byte array, will return an LONG
+	// given byte array of size 8, will return LONG
 	public Object getLong(byte[] payload ){
-		
-		// Return 8 byte long integer value
-		
 		return Long.toString( ByteBuffer.wrap(payload).getLong() );
 	}
 	
-	// return char at beginning of byte array
+	// return char at beginning of byte array (Used to get messageType)
 	public String getChar(byte[] payload ){
 		
 		String messageType = new String(payload);
-
-		ByteBuffer payBuf = ByteBuffer.wrap(payload);
 
 		String c = "";
 		c = c + messageType.charAt(0);
 		
 		return c;
 	}
-	
-	// Reverse a byte array-- for big endian
-	public  void reverse(byte[] array) {
 
-		
-	      if (array == null) {
-	          return;
-	      }
-	      int i = 0;
-	      int j = array.length - 1;
-	      byte tmp;
-	      while (j > i) {
-	          tmp = array[j];
-	          array[j] = array[i];
-	          array[i] = tmp;
-	          j--;
-	          i++;
-	      }
-	  }
 
-	// payload in, get the messageType, the fields, then the calc the message  
+	// Payload in, get the messageType, the fields, then the get the message  
 	public ArrayList<String> messageIn(byte[] payload) throws UnsupportedEncodingException{
 		
-		// Keep track of where we are in the message
+		// Keep track of where we are at in the message
 		int messagePointer = 0;
 		 
 		ArrayList<String> messageArray = new ArrayList<String>();
@@ -106,44 +89,31 @@ public class Parsers {
 		// Get the fields for this message
 		fieldsArray = this.parDS.getFields(messageType);
 		
-		// loop over fields array, parsing messages --start at 1, we already have messagetype
+		
+		// loop over fields array, parsing messages --start at 1, we already have messageType
 		for (int i = 1; i<fieldsArray.size(); i++){
 			
+			// Get the field for this part of the message
 			ArrayList<Object> fieldArray = this.parDS.getFormat( (String) fieldsArray.get(i));
 			
-			// Split payload, get the array for this field
-			byte[] slicedArray  = splitByte(payload, messagePointer, (Integer) fieldArray.get(1) );
-			
-			// Call appropriate parser on the slicedArray, get the value
-			messageArray.add( parse(slicedArray, fieldArray) ); 
-			
+
+			// Call appropriate parser on the split payload
+			messageArray.add( parse( Arrays.copyOfRange(payload, messagePointer, 
+					messagePointer+ ((Integer) fieldArray.get(1)) ) ,
+					fieldArray));
+
 			// Move the array cursor after looking at this field
 			messagePointer = messagePointer + ((Integer) fieldArray.get(1));
 		}
-
-		//System.out.println("MESSAGE ARR: " + messageArray.toString());
 		return messageArray;
 		
 	}
 	
-	// Given input byteArray, start & len-- output new array
-	public byte[] splitByte(byte[] byteArray, int start, int len){
-		
-		byte[] slicedArray = new byte[len];
-		
-		// Loop through old array, create new
-		for (int i = 0; i< len; i++ ){
-			slicedArray[i] = byteArray[start+i];
-		}
-		
-		return slicedArray;
-	}
-
 
 	// With input byteArray, len & parse type, call approp parser
 	public String parse(byte[] arr, ArrayList<Object> fieldArray) throws UnsupportedEncodingException{
-		String value = null;
 		
+		String value = null;
 		
 		switch( (Integer) fieldArray.get(0) ){
 		

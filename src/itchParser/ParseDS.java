@@ -10,6 +10,16 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * ParseDS will create the Data Structures needed
+ * to parse the byte array message
+ * 
+ * @author William Sell
+ * 
+ * quannabe@gmail.com
+ *
+ */
+
 public class ParseDS {
 	
 	// yaml DS map
@@ -17,8 +27,12 @@ public class ParseDS {
 	private Map<Object,Object> fMap;
 	private Map<Object,Object> mMap;
 	
-	// constructor
-	ParseDS(Yaml yaml, String filename) throws FileNotFoundException{
+	private Yaml yaml;
+	
+	// constructor will take in the yaml parser
+	ParseDS(String filename) throws FileNotFoundException{
+		
+		yaml = new Yaml();
 		
 		InputStream yInput;
 		
